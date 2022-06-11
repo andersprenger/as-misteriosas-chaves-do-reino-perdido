@@ -1,12 +1,11 @@
 import Foundation
 
-typealias Node = (x: Int, y: Int)
 typealias Door = (char: Character, node: Node)
 
 var matrix: [[Character]] = loadMatrix(from: "caso00")
-var markedNodes: [Node] = []
-var keys: [Character] = []
-var lockedDoors: [Door] = []
+var markedNodes: Set<Node> = []
+var keys: Set<Character> = []
+var lockedDoors: Set<Node> = []
 var players: [Node] = []
 
 func searchForPlayers() {
@@ -16,7 +15,7 @@ func searchForPlayers() {
             
             switch char {
             case "1", "2","3", "4", "5", "6", "7", "8", "9":
-                players.append((x, y))
+                players.append(Node(x, y))
                 print("Player \(char) encontrado.")
                 
             default:
@@ -28,24 +27,28 @@ func searchForPlayers() {
     print(players)
 }
 
-func dfs(node: Node) {
+func dfs(from node: Node) {
     markedNodes = []
-    markedNodes += [node]
+    markedNodes.insert(node)
     var list: [Node] = [node]
     
     while !list.isEmpty {
         let visited = list.removeFirst()
         
-        for x in visited.x - 1 ..< visited.x + 1 where x >= 0 && x < matrix.count {
-            for y in visited.y - 1 ..< visited.y + 1 where y >= 0 && y < matrix[x].count {
-                let isMarked = markedNodes.contains { $0 == (x, y) }
+        for x in visited.x - 1 ... visited.x + 1 where x >= 0 && x < matrix.count {
+            for y in visited.y - 1 ... visited.y + 1 where y >= 0 && y < matrix[x].count {
+                let isMarked = markedNodes.contains(Node(x, y))
                 
-                guard (x, y) != visited && !isMarked else {
+                guard Node(x, y) != visited && !isMarked else {
                     continue
                 }
                 
-                list = [(x, y)] + list
-                markedNodes += [(x, y)]
+                list = [Node(x, y)] + list
+                markedNodes.insert(Node(x, y))
+                
+//                let char = matrix[x][y]
+//                print(x,y)
+                
             }
         }
     }
@@ -54,4 +57,4 @@ func dfs(node: Node) {
 }
 
 //searchForPlayers()
-dfs(node: (20, 6))
+dfs(from: Node(20, 6))
