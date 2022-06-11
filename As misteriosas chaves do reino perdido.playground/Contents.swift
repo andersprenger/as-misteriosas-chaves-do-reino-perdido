@@ -3,6 +3,7 @@ import Foundation
 typealias Door = (char: Character, node: Node)
 
 var matrix: [[Character]] = loadMatrix(from: "caso00")
+var checkMatrix: [[Character]] = loadMatrix(from: "caso00")
 var markedNodes: Set<Node> = []
 var keys: Set<Character> = []
 var lockedDoors: Set<Node> = []
@@ -54,6 +55,19 @@ func dfs(from node: Node) {
     }
     
     print(markedNodes.count)
+}
+
+func check() {
+    var str = ""
+    for line in checkMatrix {
+        for char in line {
+            str += "\(char)"
+        }
+        
+        str += "\n"
+    }
+    
+    print(str)
 }
 
 //searchForPlayers()
