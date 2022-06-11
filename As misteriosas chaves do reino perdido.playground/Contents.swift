@@ -1,12 +1,10 @@
 import Foundation
 
-typealias Door = (char: Character, node: Node)
-
 var matrix: [[Character]] = loadMatrix(from: "caso00")
 var checkMatrix: [[Character]] = loadMatrix(from: "caso00")
 var markedNodes: Set<Node> = []
 var keys: Set<Character> = []
-var lockedDoors: Set<Node> = []
+var lockedDoors: Set<Door> = []
 var players: [Node] = []
 
 func searchForPlayers() {
@@ -33,6 +31,8 @@ func dfs(from node: Node) {
     markedNodes.insert(node)
     var list: [Node] = [node]
     
+    var count = 1
+    
     while !list.isEmpty {
         let visited = list.removeFirst()
         
@@ -44,17 +44,47 @@ func dfs(from node: Node) {
                     continue
                 }
                 
-                list = [Node(x, y)] + list
+//                list = [Node(x, y)] + list
                 markedNodes.insert(Node(x, y))
+//                checkMatrix[x][y] = "&"
                 
-//                let char = matrix[x][y]
-//                print(x,y)
+                let char = matrix[x][y]
                 
+                switch char {
+                case ".","1","2","3","4","5","6","7","8","9":
+                    count += 1
+                    checkMatrix[x][y] = "&"
+                    
+                    list = [Node(x, y)] + list
+                    
+                case "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z":
+                    count += 1
+                    checkMatrix[x][y] = "&"
+                    
+                    keys.insert(char)
+                    
+                    for door in lockedDoors where door.char == char.uppercased().first {
+                        list = [Node(x, y)] + list
+                        lockedDoors.remove(door)
+                    }
+                    
+                case "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z":
+                    count += 1
+                    checkMatrix[x][y] = "&"
+                    
+                    if keys.contains(char.lowercased().first!) {
+                        list = [Node(x, y)] + list
+                    } else {
+                        lockedDoors.insert(Door(char, Node(x, y)))
+                    }
+                default:
+                    break
+                }
             }
         }
     }
     
-    print(markedNodes.count)
+    print(count, "\n")
 }
 
 func check() {
@@ -70,5 +100,6 @@ func check() {
     print(str)
 }
 
-//searchForPlayers()
-dfs(from: Node(20, 6))
+searchForPlayers()
+dfs(from: Node(15, 16))
+check()
