@@ -30,8 +30,8 @@ func dfs(from node: Node) {
     markedNodes.insert(node)
     var list: [Node] = [node]
     
-    var count = 0
-    
+    var wallCounter = 0
+
     while !list.isEmpty {
         let visited = list.removeFirst()
         
@@ -49,27 +49,18 @@ func dfs(from node: Node) {
                 
                 switch char {
                 case ".":
-                    count += 1
-                    
                     list = [Node(x, y)] + list
                     
                 case "1","2","3","4","5","6","7","8","9":
                     list = [Node(x, y)] + list
                     
                 case "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z":
-                    count += 1
                     
                     list = [Node(x, y)] + list
                     
                     keys.insert(char)
                     
-                    print(keys)
-                    
                     for door in lockedDoors where door.char == char.uppercased().first {
-                        count += 1
-                        
-                        print(door, "\n")
-
                         list = [Node(x, y)] + list
                         lockedDoors.remove(door)
                         markedNodes.remove(door.node)
@@ -77,12 +68,13 @@ func dfs(from node: Node) {
                     
                 case "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z":
                     if keys.contains(char.lowercased().first!) {
-                        count += 1
-                        
                         list = [Node(x, y)] + list
                     } else {
                         lockedDoors.insert(Door(char, Node(x, y)))
                     }
+                    
+                case "#":
+                    wallCounter += 1
                     
                 default:
                     break
@@ -93,7 +85,7 @@ func dfs(from node: Node) {
     
     check()
     
-    print(count, "\n")
+    print(markedNodes.count - wallCounter - lockedDoors.count, "\n")
 }
 
 func check() {
@@ -116,4 +108,7 @@ func check() {
 }
 
 searchForPlayers()
-dfs(from: Node(20, 6))
+
+for player in players {
+    dfs(from: player)
+}
