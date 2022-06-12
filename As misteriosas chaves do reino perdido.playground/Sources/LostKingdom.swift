@@ -28,6 +28,10 @@ public class LostKingdom {
         for player in players {
             dfs(from: player)
         }
+        
+//        printMatrix(matrix)
+//
+//        dfs(from: Player("9", in: Node(118, 113)))
     }
     
     func searchForPlayers() {
@@ -47,13 +51,15 @@ public class LostKingdom {
         
         players.sort()
         
-        //        print("\n")
-        //        print(players)
-        //        print("\n")
+//        print("\n")
+//        print(players)
+//        print("\n")
     }
     
     func dfs(from player: Player) {
         markedNodes = []
+        keys = []
+        lockedDoors = []
         
         list = [player.node]
         
@@ -74,9 +80,7 @@ public class LostKingdom {
     }
     
     func move(from node: Node) {
-        let isMarked = markedNodes.contains(node)
-        
-        guard !isMarked else {
+        guard !markedNodes.contains(node) else {
             return
         }
         
@@ -96,7 +100,6 @@ public class LostKingdom {
         
         markedNodes.insert(node)
         
-        
         switch char {
         case ".","1","2","3","4","5","6","7","8","9":
             list = [node] + list
@@ -109,13 +112,13 @@ public class LostKingdom {
                 list = [door.node] + list
                 
                 lockedDoors.remove(door)
-                markedNodes.remove(door.node)
             }
             
         case "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z":
             if keys.contains(char.lowercased().first!) {
                 list = [node] + list
             } else {
+                markedNodes.remove(node)
                 lockedDoors.insert(Door(char, node))
             }
             
