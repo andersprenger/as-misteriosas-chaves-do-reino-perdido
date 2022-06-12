@@ -21,7 +21,7 @@ class LostKingdom {
         players = []
         caso = arquivoCaso
         list = []
-
+        
         
         searchForPlayers()
         
@@ -29,7 +29,7 @@ class LostKingdom {
             dfs(from: player)
         }
         
-        dfs(from: Player("3", in: Node(22, 55)))
+        //        dfs(from: Player("3", in: Node(22, 55)))
     }
     
     func searchForPlayers() {
@@ -40,7 +40,6 @@ class LostKingdom {
                 switch char {
                 case "1", "2","3", "4", "5", "6", "7", "8", "9":
                     players.append(Player(char, in: Node(x, y)))
-//                    print("Player \(char) encontrado.")
                     
                 default:
                     break
@@ -48,9 +47,9 @@ class LostKingdom {
             }
         }
         
-//        print("\n")
-//        print(players)
-//        print("\n")
+        //        print("\n")
+        //        print(players)
+        //        print("\n")
     }
     
     func dfs(from player: Player) {
@@ -65,18 +64,18 @@ class LostKingdom {
         while !list.isEmpty {
             let visited = list.removeFirst()
             
-            move(from: Node(visited.x - 1, visited.y), list: &list)
-            move(from: Node(visited.x + 1, visited.y), list: &list)
-            move(from: Node(visited.x, visited.y - 1), list: &list)
-            move(from: Node(visited.x, visited.y + 1), list: &list)
+            move(from: Node(visited.x - 1, visited.y))
+            move(from: Node(visited.x + 1, visited.y))
+            move(from: Node(visited.x, visited.y - 1))
+            move(from: Node(visited.x, visited.y + 1))
         }
         
-//        check()
+        //        check()
         
         print("Player \(player.char):", visitedNodes.count)
     }
     
-    func move(from node: Node, list: inout [Node]) {
+    func move(from node: Node) {
         let isMarked = markedNodes.contains(node)
         
         guard !isMarked else {
@@ -96,12 +95,12 @@ class LostKingdom {
             list = [node] + list
             
             visitedNodes.insert(node)
-
+            
             keys.insert(char)
             
             for door in lockedDoors where door.char == char.uppercased().first {
                 list = [node] + list
-
+                
                 lockedDoors.remove(door)
                 markedNodes.remove(door.node)
                 
