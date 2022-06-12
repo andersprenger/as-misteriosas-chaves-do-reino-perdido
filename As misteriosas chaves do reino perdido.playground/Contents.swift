@@ -5,7 +5,7 @@ class LostKingdom {
     var markedNodes: Set<Node>
     var keys: Set<Character>
     var lockedDoors: Set<Door>
-    var players: [Node]
+    var players: [Player]
     
     init(_ arquivoCaso: String = "caso00") {
         print(arquivoCaso)
@@ -18,9 +18,9 @@ class LostKingdom {
         
         searchForPlayers()
         
-//        for player in players {
-//            dfs(from: player)
-//        }
+        for player in players {
+            dfs(from: player)
+        }
     }
     
     func searchForPlayers() {
@@ -30,8 +30,8 @@ class LostKingdom {
                 
                 switch char {
                 case "1", "2","3", "4", "5", "6", "7", "8", "9":
-                    players.append(Node(x, y))
-                    print("Player \(char) encontrado.")
+                    players.append(Player(char, in: Node(x, y)))
+//                    print("Player \(char) encontrado.")
                     
                 default:
                     break
@@ -39,17 +39,18 @@ class LostKingdom {
             }
         }
         
-        print("\n")
-        print(players)
-        print("\n")
+//        print("\n")
+////        print(players)
+//        print("\n")
     }
     
-    func dfs(from node: Node) {
+    func dfs(from player: Player) {
         markedNodes = []
-        markedNodes.insert(node)
-        var list: [Node] = [node]
+        var visitedNodes: Set<Node> = []
+        markedNodes.insert(player.node)
+        var list: [Node] = [player.node]
         
-        var wallCounter = 0
+        visitedNodes.insert(player.node)
         
         while !list.isEmpty {
             let visited = list.removeFirst()
@@ -70,30 +71,37 @@ class LostKingdom {
                     case ".":
                         list = [Node(x, y)] + list
                         
+                        visitedNodes.insert(Node(x,y))
+                        
                     case "1","2","3","4","5","6","7","8","9":
                         list = [Node(x, y)] + list
                         
-                    case "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z":
+                        visitedNodes.insert(Node(x,y))
                         
+                    case "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z":
                         list = [Node(x, y)] + list
                         
+                        visitedNodes.insert(Node(x,y))
+
                         keys.insert(char)
                         
                         for door in lockedDoors where door.char == char.uppercased().first {
                             list = [Node(x, y)] + list
+        
                             lockedDoors.remove(door)
                             markedNodes.remove(door.node)
+                            
+                            visitedNodes.insert(door.node)
                         }
                         
                     case "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z":
                         if keys.contains(char.lowercased().first!) {
                             list = [Node(x, y)] + list
+                            
+                            visitedNodes.insert(Node(x,y))
                         } else {
                             lockedDoors.insert(Door(char, Node(x, y)))
                         }
-                        
-                    case "#":
-                        wallCounter += 1
                         
                     default:
                         break
@@ -104,7 +112,7 @@ class LostKingdom {
         
 //        check()
         
-        print(markedNodes.count - wallCounter - lockedDoors.count, "\n")
+        print("Player \(player.char):", visitedNodes.count)
     }
     
     func check() {
