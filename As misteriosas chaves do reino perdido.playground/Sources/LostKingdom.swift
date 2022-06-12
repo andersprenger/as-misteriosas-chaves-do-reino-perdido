@@ -45,6 +45,8 @@ public class LostKingdom {
             }
         }
         
+        players.sort()
+        
         //        print("\n")
         //        print(players)
         //        print("\n")
