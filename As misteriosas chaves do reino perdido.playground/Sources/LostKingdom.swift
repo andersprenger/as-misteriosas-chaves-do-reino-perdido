@@ -14,6 +14,8 @@ public class LostKingdom {
     public init(_ fileName: String = "caso00") {
         print(fileName)
         
+        let t0 = DispatchTime.now()
+        
         matrix = loadMatrix(from: fileName)
         markedNodes = []
         
@@ -28,6 +30,12 @@ public class LostKingdom {
         for player in players {
             dfs(from: player)
         }
+        
+        let t1 = DispatchTime.now()
+        let nanoTime = t1.uptimeNanoseconds - t0.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000
+        
+        print(fileName, "time", timeInterval)
         
 //        printMatrix(matrix)
 //
@@ -86,11 +94,10 @@ public class LostKingdom {
         
         let char = matrix[node.x][node.y]
 
-        guard char != "#" else {
-            return
-        }
-                
         switch char {
+        case "#":
+            return
+            
         case ".","1","2","3","4","5","6","7","8","9":
             list = [node] + list
             markedNodes.insert(node)
